@@ -24,9 +24,12 @@ class App extends React.Component {
     componentDidMount = async ()=> {
         // add 'http://localhost:3002/init' part
         var result = await axios.get('http://localhost:3002/init')
-        result.data
+        if(result.data){
+            this.props.signIn(this.state.username)
+            this.props.addFriends(result.data.friends)
+            this.props.userId(result.data._id)
+        }
         console.log(result, 'init')
-
     }
 
     submit = async () =>{

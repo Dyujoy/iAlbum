@@ -10,26 +10,31 @@ var corsOptions = {
 }
 
 var currentUserId = ''
-//
-// router.get('/init', cors(corsOptions), function(req,res) {
-//   // add cookies part
-//
-//   if(req.cookies.id) {
-//     try {
-//       var db = req.db
-//       var userList = db.get('userList')
-//       userList.find({'_id':req.cookies.id}, {}, function (err,docs) {
-//
-//       })
-//       res.json('initialisation', req.cookies.id)
-//     } catch (err) {
-//       console.log(err)
-//     }
-//   }
-//
-//   // res.json(req.cookies)
-//   // console.log(req)
-// })
+
+router.get('/init', cors(corsOptions), function(req,res) {
+  // add cookies part
+
+  if(req.cookies.id) {
+    try {
+      var db = req.db
+      var userList = db.get('userList')
+      userList.find({'_id':req.cookies.id}, {}, function (err,docs) {
+        try{
+          // userList.find({'_id': docs[0]})
+          res.json(docs[0])
+        }catch(error) {
+          res.json(error)
+        }
+      })
+      res.json(req.cookies.id)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  // res.json(req.cookies)
+  // console.log(req)
+})
 
 router.post('/login', cors(corsOptions), function(req,res) {
   var username = req.body.username
@@ -118,10 +123,10 @@ router.post('/uploadphoto', cors(corsOptions),function(req, res) {
   }
 
   // generate a random number
-  var random_num_str = getRandomInt(10000000, 90000000).toString();
+  var randomNumber = getRandomInt(1000, 90000).toString();
 
   // this is the absolute path for storing the received photo
-  var path = "./public/uploads/"+random_num_str+".jpg";
+  var path = "./public/uploads/"+randomNumber+".jpg";
 
   // call the following function to store the received photo
   req.pipe(fs.createWriteStream(path));
